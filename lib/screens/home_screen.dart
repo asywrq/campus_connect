@@ -83,7 +83,7 @@ class HomeScreenState extends State<HomeScreen> {
                       'assets/images/campus_banner.png',
                       width: double.infinity,
                       height: 160,
-                      fit: BoxFit.fitWidth,
+                      fit: BoxFit.cover,
                       semanticLabel: 'CampusConnect campus information banner',
                     ),
                   ),
@@ -117,6 +117,7 @@ class HomeScreenState extends State<HomeScreen> {
                         icon: Icons.campaign_outlined,
                         title: 'Announcements',
                         subtitle: 'Important campus updates',
+                        imagePath: 'assets/images/announcements_banner.png',
                         actionIcon: _isImportant
                             ? Icons.star
                             : Icons.star_border,
@@ -129,6 +130,7 @@ class HomeScreenState extends State<HomeScreen> {
                         icon: Icons.event_outlined,
                         title: 'Campus Events',
                         subtitle: 'Activities and programmes',
+                        imagePath: 'assets/images/events_banner.png',
                         actionIcon: _isEventFavourite
                             ? Icons.favorite
                             : Icons.favorite_border,
@@ -144,12 +146,16 @@ class HomeScreenState extends State<HomeScreen> {
                       ),
                     ];
                     if (isWide) {
-                      return Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      return Column(
                         children: [
-                          Expanded(child: cards[0]),
-                          Expanded(child: cards[1]),
-                          Expanded(child: cards[2]),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(child: cards[0]),
+                              Expanded(child: cards[1]),
+                            ],
+                          ),
+                          cards[2], // My Profile card sits below the Row
                         ],
                       );
                     }
