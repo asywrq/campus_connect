@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/campus_banner.dart';
 import '../widgets/feature_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,6 +13,23 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   bool _isImportant = false;
 
+  final List<Map<String, String>> _announcements = const [
+    {
+      'id': 'a1',
+      'title': 'Library opening hours',
+      'detail': 'Extended access during revision week',
+    },
+    {
+      'id': 'a2',
+      'title': 'Campus maintenance',
+      'detail': 'Temporary closure of the east entrance',
+    },
+    {
+      'id': 'a3',
+      'title': 'Student wellness',
+      'detail': 'Wellness activities this Friday',
+    },
+  ];
   void _toggleImportant() {
     setState(() {
       _isImportant = !_isImportant;
@@ -79,18 +97,17 @@ class HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 16),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: Image.asset(
-                      'assets/images/campus_banner.png',
-                      width: double.infinity,
-                      height: 160,
-                      fit: BoxFit.cover,
-                      semanticLabel: 'CampusConnect campus information banner',
+                    child: CampusBanner(
+                      imagePath: 'assets/images/campus_background.png',
+                      title: 'CampusConnect',
+                      subtitle: 'Your campus information in one place.',
                     ),
                   ),
                 ],
-                const Text(
+                Text(
                   'Explore',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.titleLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 FilledButton.icon(
@@ -160,6 +177,34 @@ class HomeScreenState extends State<HomeScreen> {
                       );
                     }
                     return Column(children: cards);
+                  },
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Latest Announcements',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                ListView.builder(
+                  itemCount: _announcements.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final item = _announcements[index];
+                    return Card(
+                      key: ValueKey(item['id']),
+                      child: ListTile(
+                        leading: const Icon(Icons.notifications_outlined),
+                        title: Text(item['title']!),
+                        subtitle: Text(item['detail']!),
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Selected: ${item['title']}'),
+                            ),
+                          );
+                        },
+                      ),
+                    );
                   },
                 ),
               ],
