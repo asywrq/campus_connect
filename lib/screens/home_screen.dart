@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../widgets/campus_banner.dart';
 import '../widgets/feature_card.dart';
+import '../models/campus_event.dart';
+import '../widgets/event_tile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,6 +32,7 @@ class HomeScreenState extends State<HomeScreen> {
       'detail': 'Wellness activities this Friday',
     },
   ];
+
   void _toggleImportant() {
     setState(() {
       _isImportant = !_isImportant;
@@ -37,6 +40,49 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   bool _isEventFavourite = false;
+
+  final List<CampusEvent> _campusEvents = [
+    const CampusEvent(
+      id: 'e1',
+      title: 'KICT Festival',
+      date: '10 Oct 2026',
+      location: 'KICT Grounds',
+    ),
+    const CampusEvent(
+      id: 'e2',
+      title: 'LLM Workshop',
+      date: '15 Oct 2026',
+      location: 'Lecture Hall 12',
+    ),
+    const CampusEvent(
+      id: 'e3',
+      title: 'Taaruf Week',
+      date: '20 Oct 2026',
+      location: 'SHAS Mosque',
+    ),
+    const CampusEvent(
+      id: 'e4',
+      title: 'Convocation Ceremony',
+      date: '28 Nov 2026',
+      location: 'ICC Hall',
+    ),
+  ];
+
+  int _eventCounter = 5;
+
+  void _addSampleEvent() {
+    setState(() {
+      final idNumber = _eventCounter++;
+      _campusEvents.add(
+        CampusEvent(
+          id: 'e$idNumber',
+          title: 'Workshop #$idNumber',
+          date: '5 Dec 2026',
+          location: 'KICT Conference Room',
+        ),
+      );
+    });
+  }
 
   void _toggleEventFavourite() {
     setState(() {
@@ -86,9 +132,12 @@ class HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Welcome to CampusConnect',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 const Text('Your campus information in one place.'),
@@ -122,7 +171,6 @@ class HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-
                 LayoutBuilder(
                   builder: (context, constraints) {
                     final isWide = constraints.maxWidth >= 600;
@@ -204,6 +252,51 @@ class HomeScreenState extends State<HomeScreen> {
                     );
                   },
                 ),
+                const SizedBox(height: 20),
+                Text(
+                  'Campus Event Schedule',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 8),
+                FilledButton.tonal(
+                  onPressed: _addSampleEvent,
+                  child: const Text('Add sample event'),
+                ),
+                const SizedBox(height: 8),
+                if (_campusEvents.isEmpty)
+                  const Text('No campus events available')
+                else
+                  ListView.builder(
+                    itemCount: _campusEvents.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final event = _campusEvents[index];
+                      return EventTile(
+                        key: ValueKey(event.id),
+                        event: event,
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Selected Event: ${event.title}'),
+                            ),
+                          );
+                        },
+                        onRemove: () {
+                          setState(() {
+                            _campusEvents.removeWhere(
+                              (item) => item.id == event.id,
+                            );
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Removed Event: ${event.title}'),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
               ],
             ),
           ),
