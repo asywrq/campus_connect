@@ -94,15 +94,12 @@ class HomeScreenState extends State<HomeScreen> {
                 const Text('Your campus information in one place.'),
                 const SizedBox(height: 20),
                 if (_showBanner) ...[
-                  const SizedBox(height: 16),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: CampusBanner(
-                      imagePath: 'assets/images/campus_background.png',
-                      title: 'CampusConnect',
-                      subtitle: 'Your campus information in one place.',
-                    ),
+                  const CampusBanner(
+                    imagePath: 'assets/images/campus_background.png',
+                    title: 'CampusConnect',
+                    subtitle: 'Your campus information in one place.',
                   ),
+                  const SizedBox(height: 20),
                 ],
                 Text(
                   'Explore',
